@@ -1,16 +1,29 @@
 package pl.kupiec.recipes.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
     @Id
@@ -37,60 +50,14 @@ public class User {
     @ManyToMany
     private Set<Product> availableProducts = new HashSet<>();
     
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
     
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-    
-    public void setEmail(String email) {
+    public User(String email, String password, Set<Role> roles) {
         this.email = email;
-    }
-    
-    public String getPassword() {
-        return password;
-    }
-    
-    public void setPassword(String password) {
         this.password = password;
-    }
-    
-    public Boolean getVege() {
-        return vege;
-    }
-    
-    public void setVege(Boolean vege) {
-        this.vege = vege;
-    }
-    
-    public Boolean getVegan() {
-        return vegan;
-    }
-    
-    public void setVegan(Boolean vegan) {
-        this.vegan = vegan;
-    }
-    
-    public Set<Product> getEliminatedProducts() {
-        return eliminatedProducts;
-    }
-    
-    public void setEliminatedProducts(Set<Product> eliminatedProducts) {
-        this.eliminatedProducts = eliminatedProducts;
-    }
-    
-    public Set<Recipe> getFavouriteRecipes() {
-        return favouriteRecipes;
-    }
-    
-    public void setFavouriteRecipes(Set<Recipe> favouriteRecipes) {
-        this.favouriteRecipes = favouriteRecipes;
+        this.roles = roles;
     }
 }
