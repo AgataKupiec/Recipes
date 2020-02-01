@@ -1,0 +1,81 @@
+create schema recipes CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+create table products
+(
+    id      int auto_increment not null,
+    name    tinytext           not null,
+    kcal    double(7, 2) unsigned,
+    carbs   double(7, 2) unsigned,
+    fat     double(7, 2) unsigned,
+    protein double(7, 2) unsigned,
+    vege    boolean default false,
+    vegan   boolean default false,
+    primary key (id)
+);
+
+create table users
+(
+    id       int auto_increment not null,
+    email    varchar(50),
+    password char(60),
+    vege     boolean default false,
+    vegan    boolean default false,
+    primary key (id)
+);
+
+create table recipes
+(
+    id        int auto_increment not null,
+    author_id int unsigned,
+    title     tinytext,
+    content   text,
+    servings  tinyint unsigned,
+    time      smallint unsigned,
+    vege      boolean default false,
+    vegan     boolean default false,
+    primary key (id),
+    foreign key (author_id) references users (id)
+);
+
+create table units
+(
+    id   int auto_increment not null,
+    name char(10),
+    primary key (id)
+);
+
+create table recipes_products
+(
+    id         int auto_increment not null,
+    recipe_id  int unsigned,
+    product_id int unsigned,
+    quantity   int unsigned,
+    unit_id    int unsigned,
+    primary key (id),
+    foreign key (recipe_id) references recipes (id),
+    foreign key (product_id) references products (id),
+    foreign key (unit_id) references units (id)
+);
+
+create table users_available_products
+(
+    user_id               int unsigned,
+    available_products_id int unsigned,
+    primary key (user_id, available_products_id)
+);
+
+create table users_eliminated_products
+(
+    user_id                int unsigned,
+    eliminated_products_id int unsigned,
+    primary key (user_id, eliminated_products_id)
+);
+
+create table users_favourite_products
+(
+    user_id             int unsigned,
+    favourie_recipes_id int unsigned,
+    primary key (user_id, favourie_recipes_id)
+);
+
+
