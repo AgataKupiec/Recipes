@@ -1,5 +1,10 @@
 package pl.kupiec.recipes.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -8,18 +13,24 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 
+@Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table (name = "recipes")
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+    @NotBlank
     private String title;
-    
+    @NotBlank
     private String content;
     
     private Boolean vege;
@@ -28,6 +39,10 @@ public class Recipe {
     
     private Integer servings;
     
+    private String image;
+    
+    @Transient
+    private String imageBuff;
     //in minutes
     private Integer time;
     
@@ -36,79 +51,6 @@ public class Recipe {
     
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe")
     private List<RecipeProducts> products;
-    
-    
-    public Long getId() {
-        return id;
-    }
-    
-    public void setId(Long id) {
-        this.id = id;
-    }
-    
-    public String getContent() {
-        return content;
-    }
-    
-    public void setContent(String content) {
-        this.content = content;
-    }
-    
-    public Boolean getVege() {
-        return vege;
-    }
-    
-    public void setVege(Boolean vege) {
-        this.vege = vege;
-    }
-    
-    public Boolean getVegan() {
-        return vegan;
-    }
-    
-    public void setVegan(Boolean vegan) {
-        this.vegan = vegan;
-    }
-    
-    public Integer getServings() {
-        return servings;
-    }
-    
-    public void setServings(Integer servings) {
-        this.servings = servings;
-    }
-    
-    public Integer getTime() {
-        return time;
-    }
-    
-    public void setTime(Integer time) {
-        this.time = time;
-    }
-    
-    public User getAuthor() {
-        return author;
-    }
-    
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-    
-    public List<RecipeProducts> getProducts() {
-        return products;
-    }
-    
-    public void setProducts(List<RecipeProducts> products) {
-        this.products = products;
-    }
-    
-    public String getTitle() {
-        return title;
-    }
-    
-    public void setTitle(String title) {
-        this.title = title;
-    }
     
     @Override
     public boolean equals(Object o) {

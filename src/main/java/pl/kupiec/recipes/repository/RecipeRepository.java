@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.kupiec.recipes.entity.Product;
 import pl.kupiec.recipes.entity.Recipe;
+import pl.kupiec.recipes.entity.User;
 
 import java.util.List;
 import java.util.Set;
@@ -24,5 +25,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Set<Recipe> findRecipesFromProducts(@Param("products")List<Product>products);
     
     List<Recipe> findByTitleLike(String title);
+    
+    List<Recipe> findByAuthor(User user);
 
 }

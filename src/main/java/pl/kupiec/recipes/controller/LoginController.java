@@ -1,67 +1,91 @@
 package pl.kupiec.recipes.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 import pl.kupiec.recipes.entity.User;
+import pl.kupiec.recipes.pojo.CurrentUser;
+import pl.kupiec.recipes.repository.ProductRepository;
+import pl.kupiec.recipes.repository.RecipeProductsRepository;
+import pl.kupiec.recipes.repository.RecipeRepository;
+import pl.kupiec.recipes.repository.RoleRepository;
+import pl.kupiec.recipes.repository.UnitRepository;
+import pl.kupiec.recipes.repository.UserRepository;
 import pl.kupiec.recipes.service.UserService;
 
 import javax.validation.Valid;
 
+@Slf4j
+@AllArgsConstructor
 @Controller
 public class LoginController {
-    @Autowired
-    private UserService userService;
+    private final RecipeProductsRepository recipeProductsRepository;
+    private final RecipeRepository recipeRepository;
+    private final ProductRepository productRepository;
+    private final UnitRepository unitRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
+    private final RoleRepository roleRepository;
+    private final UserDetailsService userDetailsService;
     
-//    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-//    public String login() {
-//
-//        return "admin/login";
+//    @GetMapping("/admin")
+//    @ResponseBody
+//    public String userInfo(ModelMap modelMap, Principal principal) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String name = principal.getName();
+//        return name;
 //    }
     
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
+    public String login() {
+        
+        return "admin/login";
+    }
+    
+    @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
+    @ResponseBody
+    public String loginIn(@AuthenticationPrincipal CurrentUser customUser) {
+        
+        return "redirect:admin";
+    }
+    
+    @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
+    public String logout() {
+        return "logout";
+    }
+    
     @RequestMapping(value="/registration", method = RequestMethod.GET)
-    public ModelAndView registration(){
-        ModelAndView modelAndView = new ModelAndView();
+    public String registration(Model model){
         User user = new User();
-        modelAndView.addObject("user", user);
-        modelAndView.setViewName("registration");
-        return modelAndView;
+        model.addAttribute("user", user);
+        return "registration";
     }
     
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String createNewUser(@Valid User user, BindingResult bindingResult, Model model) {
+        
         User userExists = userService.findByEmail(user.getEmail());
         if (userExists != null) {
             bindingResult
-                    .rejectValue("userName", "error.user",
-                            "There is already a user registered with the user name provided");
+                    .rejectValue("email", "error.user",
+                            "There is already a user registered with the user e-mail provided");
         }
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("registration");
+            return "registration";
         } else {
             userService.saveUser(user);
-            modelAndView.addObject("successMessage", "User has been registered successfully");
-            modelAndView.addObject("user", new User());
-            modelAndView.setViewName("registration");
-            
         }
-        return modelAndView;
+        user = userService.findByEmail(user.getEmail());
+        model.addAttribute("user", user);
+        return "registration";
     }
     
-    @RequestMapping(value="/admin/home", method = RequestMethod.GET)
-    public ModelAndView home(){
-        ModelAndView modelAndView = new ModelAndView();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findByEmail(auth.getName());
-        modelAndView.addObject("userName", "Welcome " + user.getEmail());
-        modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
-        modelAndView.setViewName("admin/home");
-        return modelAndView;
-    }
+
 }

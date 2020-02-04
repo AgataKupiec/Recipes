@@ -18,8 +18,8 @@
     <div><input type="submit" value="Sign In"/></div>
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <sec:authorize access="isAuthenticated()">
-        <p>Zalogowany jako: <sec:authentication property="username"/></p>
-        <p>Posiada role: <sec:authentication property="authorities"/></p>
+        <p>Zalogowany jako: <sec:authentication property="principal.username"/></p>
+        <p>Posiada role: <sec:authentication property="principal.authorities"/></p>
     </sec:authorize>
 
 </form>

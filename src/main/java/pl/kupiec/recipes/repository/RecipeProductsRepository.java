@@ -2,6 +2,7 @@ package pl.kupiec.recipes.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import pl.kupiec.recipes.entity.Product;
+import pl.kupiec.recipes.entity.Recipe;
 import pl.kupiec.recipes.entity.RecipeProducts;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface RecipeProductsRepository extends JpaRepository<RecipeProducts, 
     List<RecipeProducts> findByProductIsNotIn(List<Product> product);
     
     List<RecipeProducts> findByProductIn(List<Product> products);
+    
+    boolean existsByProductAndRecipe (Product product, Recipe recipe);
     
     
 }

@@ -1,5 +1,10 @@
 package pl.kupiec.recipes.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,9 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import java.util.Objects;
 
+@Data
 @Entity
-@Table (name = "recipes_products")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table (name = "recipes_products", uniqueConstraints={
+        @UniqueConstraint(columnNames = {"product_id", "recipe_id"})})
 public class RecipeProducts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +32,6 @@ public class RecipeProducts {
     private Recipe recipe;
     
     @ManyToOne
-    //@JoinTable(name = "recipes_products")
     @JoinColumn(name = "product_id")
     private Product product;
     
@@ -30,12 +41,17 @@ public class RecipeProducts {
     @JoinColumn(name = "unit_id")
     private Unit unit;
     
-    public Long getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RecipeProducts)) return false;
+        RecipeProducts that = (RecipeProducts) o;
+        return Objects.equals(id, that.id);
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
     
     public Recipe getRecipe() {
@@ -44,29 +60,5 @@ public class RecipeProducts {
     
     public void setRecipe(Recipe recipe) {
         this.recipe = recipe;
-    }
-    
-    public Product getProduct() {
-        return product;
-    }
-    
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-    
-    public Double getQuantity() {
-        return quantity;
-    }
-    
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-    
-    public Unit getUnit() {
-        return unit;
-    }
-    
-    public void setUnit(Unit unit) {
-        this.unit = unit;
     }
 }

@@ -2,18 +2,15 @@ package pl.kupiec.recipes.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import pl.kupiec.recipes.entity.Product;
 import pl.kupiec.recipes.entity.User;
-import pl.kupiec.recipes.pojo.CurrentUser;
 import pl.kupiec.recipes.repository.ProductRepository;
 import pl.kupiec.recipes.repository.RecipeProductsRepository;
 import pl.kupiec.recipes.repository.RecipeRepository;
@@ -23,13 +20,11 @@ import pl.kupiec.recipes.repository.UserRepository;
 import pl.kupiec.recipes.service.UserService;
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Set;
 
 @Slf4j
 @AllArgsConstructor
 @Controller
-//@RequestMapping("chef")
+@RequestMapping("/chef")
 public class UserController {
     
     private final RecipeProductsRepository recipeProductsRepository;
@@ -41,56 +36,50 @@ public class UserController {
     private final RoleRepository roleRepository;
     private final UserDetailsService userDetailsService;
     
-    @GetMapping("/create-user")
-    @ResponseBody
-    public String createUser() {
-        User user = new User();
-        user.setEmail("a@admin");
-        user.setPassword("admin");
-        user.setRoles((new HashSet<>(roleRepository.findAll())));
-        User user2 = new User();
-        user.setEmail("user");
-        user.setPassword("user");
-        user.setRoles(Set.of(roleRepository.findByRole("ROLE_USER")));
-        userService.saveUser(user);
-        userService.saveUser(user2);
-        return "admin";
+    @GetMapping("/profile")
+    public String userDetails(Model model, Principal principal) {
+        User currUser = userRepository.findByEmail(principal.getName());
+        Product product = new Product();
+        model.addAttribute("product", product);
+        model.addAttribute("user", currUser);
+        model.addAttribute("products", productRepository.findAll());
+        return "user/details";
     }
     
-    @GetMapping("/admin")
-    @ResponseBody
-    public String userInfo(ModelMap modelMap, Principal principal) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String name = principal.getName();
-//
-//        userDetailsService.loadUserByUsername();
-//        User entityUser = customUser.getUser();
-        return name;
+    @GetMapping("/eliminateProduct/remove/{id}")
+    public String removeEliminatedProduct(Principal principal, @PathVariable Long id) {
+        User currUser = userRepository.findByEmail(principal.getName());
+        Product product = productRepository.findById(id).get();
+        currUser.getEliminatedProducts().remove(product);
+        userRepository.save(currUser);
+        return "redirect:/chef/profile";
     }
     
-    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-    public String login() {
-        
-        return "admin/login";
+    @GetMapping("/eliminateProduct/add")
+    public String addEliminatedProduct(@RequestParam Long productId, Principal principal) {
+        User currUser = userRepository.findByEmail(principal.getName());
+        Product product = productRepository.findById(productId).get();
+        currUser.getEliminatedProducts().add(product);
+        userRepository.save(currUser);
+        return "redirect:/chef/profile";
     }
     
-    @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
-    @ResponseBody
-    public String loginIn(@AuthenticationPrincipal CurrentUser customUser) {
-        
-        return "redirect:admin";
+    @GetMapping("/availableProduct/remove/{id}")
+    public String removeAvailableProduct(Principal principal, @PathVariable Long id) {
+        User currUser = userRepository.findByEmail(principal.getName());
+        Product product = productRepository.findById(id).get();
+        currUser.getAvailableProducts().remove(product);
+        userRepository.save(currUser);
+        return "redirect:/chef/profile";
     }
     
-    @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
-    public String logout(ModelMap modelMap, Principal principal) {
-        
-        return "logout";
+    @GetMapping("/availableProduct/add")
+    public String addAvailableProduct(@RequestParam Long productId, Principal principal) {
+        User currUser = userRepository.findByEmail(principal.getName());
+        Product product = productRepository.findById(productId).get();
+        currUser.getAvailableProducts().add(product);
+        userRepository.save(currUser);
+        return "redirect:/chef/profile";
     }
     
-    @RequestMapping(value = {"/logout"}, method = RequestMethod.POST)
-    @ResponseBody
-    public String logoutPost() {
-        
-        return "logged out";
-    }
 }

@@ -18,14 +18,13 @@ public class SpringDataUserDetailsService implements UserDetailsService {
     
     @Autowired
     public void setUserService(UserService userService) {
-        
         this.userService = userService;
     }
     
         @Override
         public CurrentUser loadUserByUsername(String username) throws UsernameNotFoundException {
             User user = userService.findByEmail(username);
-            if (user == null) {throw new UsernameNotFoundException(username); }
+            if (user == null || !user.getEnabled()) {throw new UsernameNotFoundException(username); }
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
             user.getRoles().forEach(r ->
                 grantedAuthorities.add(new SimpleGrantedAuthority(r.getRole())));
@@ -33,14 +32,4 @@ public class SpringDataUserDetailsService implements UserDetailsService {
         }
     }
 
-//    @Override
-//    @Transactional
-//    public UserDetails loadUserByUsername(String email) {
-//        User user = userService.findByEmail(email);
-//        if (user == null) {throw new UsernameNotFoundException(email); }
-//        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-//        user.getRoles().forEach(r ->
-//                grantedAuthorities.add(new SimpleGrantedAuthority(r.getRole())));
-//        return new CurrentUser(user.getUsername(),user.getPassword(),
-//                grantedAuthorities, user);
-//    }
+

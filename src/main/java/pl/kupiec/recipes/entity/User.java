@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,7 +17,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -30,9 +34,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    //@Email
+    @NotBlank
+    @UniqueElements
+    @Size(min = 5, max = 30)
     private String email;
     
+    @NotBlank
     private String password;
+    
+    private Boolean enabled;
     
     private Boolean vege;
     
@@ -40,13 +51,13 @@ public class User {
     
     @OrderBy ("name")
     @ManyToMany
-    private Set<Product> eliminatedProducts = new HashSet<>();
+    private Set<Product> eliminatedProducts;
     
     @OrderBy ("title")
     @ManyToMany
     private Set<Recipe> favouriteRecipes = new HashSet<>();
     
-    @OrderBy ("title")
+    @OrderBy ("name")
     @ManyToMany
     private Set<Product> availableProducts = new HashSet<>();
     
@@ -55,9 +66,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
     
-    public User(String email, String password, Set<Role> roles) {
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
