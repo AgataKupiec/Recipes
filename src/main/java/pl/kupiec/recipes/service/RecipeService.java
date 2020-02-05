@@ -52,6 +52,16 @@ public class RecipeService {
         return recipes;
     }
     
+    public List<Recipe> allRecipesListWithPictures() {
+        List<Recipe> recipes = recipeRepository.findAll();
+        recipes.forEach(s -> {
+            if (s.getImage() != null) {
+                s.setImageBuff(storageService.convertImage(s.getImage()));
+            }
+        });
+        return recipes;
+    }
+    
     public Recipe addRecipe(Recipe recipe, MultipartFile file) {
         User user = getUserFromContext();
         recipe.setAuthor(user);

@@ -131,7 +131,7 @@
                                 <ul class="nav child_menu">
                                     <li><a href="e_commerce.html">E-commerce</a></li>
                                     <li><a href="projects.html">Projects</a></li>
-                                    <li><a href="project_detail.jsp">Project Detail</a></li>
+                                    <li><a href="not_good_now/project_detail.jsp">Project Detail</a></li>
                                     <li><a href="contacts.html">Contacts</a></li>
                                     <li><a href="profile.html">Profile</a></li>
                                 </ul>

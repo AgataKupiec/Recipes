@@ -18,23 +18,28 @@
     <!-- Custom fonts for this template-->
 
     <!-- Bootstrap -->
-    <link href="<c:url value ="/resources/vendors/bootstrap/dist/css/bootstrap.min.css" />" rel="stylesheet" type="text/css">
+    <link href="<c:url value ="/resources/vendors/bootstrap/dist/css/bootstrap.min.css" />" rel="stylesheet"
+          type="text/css">
     <!-- Font Awesome -->
-    <link href="<c:url value ="/resources/vendors/font-awesome/css/font-awesome.min.css" />" rel="stylesheet" type="text/css">
+    <link href="<c:url value ="/resources/vendors/font-awesome/css/font-awesome.min.css" />" rel="stylesheet"
+          type="text/css">
     <!-- NProgress -->
     <link href="<c:url value ="/resources/vendors/nprogress/nprogress.css" />" rel="stylesheet" type="text/css">
     <!-- iCheck -->
     <link href="<c:url value ="/resources/vendors/iCheck/skins/flat/green.css" />" rel="stylesheet" type="text/css">
 
     <!-- bootstrap-progressbar -->
-    <link href="<c:url value ="/resources/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" />" rel="stylesheet" type="text/css">
+    <link href="<c:url value ="/resources/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" />"
+          rel="stylesheet" type="text/css">
     <!-- JQVMap -->
     <link href="<c:url value ="/resources/vendors/jqvmap/dist/jqvmap.min.css" />" rel="stylesheet" type="text/css"/>
     <!-- bootstrap-daterangepicker -->
-    <link href="<c:url value ="/resources/vendors/bootstrap-daterangepicker/daterangepicker.css" />" rel="stylesheet" type="text/css">
+    <link href="<c:url value ="/resources/vendors/bootstrap-daterangepicker/daterangepicker.css" />" rel="stylesheet"
+          type="text/css">
 
     <!-- Custom Theme Style -->
     <link href="<c:url value ="/resources/css/custom.min.css" />" rel="stylesheet" type="text/css">
+
 </head>
 
 <body class="nav-md">
@@ -50,24 +55,29 @@
                 <div class="clearfix"></div>
                 <br/>
                 <!-- sidebar menu -->
+                <%--                <jsp:include page="sidebar.jsp"></jsp:include>--%>
                 <%@include file="sidebar.jsp" %>
                 <!-- sidebar menu -->
             </div>
         </div>
 
         <!-- top navigation -->
+        <%--        <jsp:include page="topbar.jsp"></jsp:include>--%>
         <%@include file="topbar.jsp" %>
         <!-- /top navigation -->
 
-        <!-- page content -->
         <div class="right_col" role="main">
+        <!-- page content -->
+        <div role="main">
             <!-- top tiles -->
 
             <div class="row">
+                <%--                <div class="col-md-12 col-sm-12 col-xs-12">--%>
+                <%--                    <jsp:include page="project_detail.jsp"></jsp:include>--%>
+                <%--                </div>--%>
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <%@include file="media_gallery.jsp" %>
                 </div>
-
             </div>
             <br/>
 
@@ -105,6 +115,8 @@
     <div class="clearfix"></div>
 </footer>
 <!-- /footer content -->
+</div>
+</div>
 
 
 <!-- jQuery -->

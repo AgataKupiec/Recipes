@@ -1,14 +1,27 @@
 package pl.kupiec.recipes.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import pl.kupiec.recipes.repository.RecipeRepository;
+import pl.kupiec.recipes.service.RecipeService;
 
 @Controller
 public class HomeController {
+    RecipeRepository recipeRepository;
+    private final RecipeService recipeService;
+    
+    public HomeController(RecipeRepository recipeRepository, RecipeService recipeService) {
+        this.recipeRepository = recipeRepository;
+        this.recipeService = recipeService;
+    }
+    
     @GetMapping("/")
-    @ResponseBody
-    public String home() { return "home"; }
+    public String home(Model model) {
+        model.addAttribute("recipes", recipeService.allRecipesListWithPictures());
+        return "index";
+    }
     
     @GetMapping("/about")
     @ResponseBody

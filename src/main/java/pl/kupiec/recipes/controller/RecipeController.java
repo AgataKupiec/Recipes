@@ -74,7 +74,8 @@ public class RecipeController {
     @GetMapping(value = "/recipe/list")
     public String recipeList(Model model) {
         model.addAttribute("recipes", recipeService.recipesListWithPictures());
-        return "recipe/userRecipes";
+//        return "recipe/userRecipes";
+        return "recipesList";
     }
     
     @PostMapping(value = "/recipe/add")

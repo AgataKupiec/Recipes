@@ -2,16 +2,13 @@ package pl.kupiec.recipes.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import pl.kupiec.recipes.entity.User;
-import pl.kupiec.recipes.pojo.CurrentUser;
 import pl.kupiec.recipes.repository.ProductRepository;
 import pl.kupiec.recipes.repository.RecipeProductsRepository;
 import pl.kupiec.recipes.repository.RecipeRepository;
@@ -46,14 +43,13 @@ public class LoginController {
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public String login() {
         
-        return "admin/login";
+        return "admin/login_v2";
     }
     
     @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
-    @ResponseBody
-    public String loginIn(@AuthenticationPrincipal CurrentUser customUser) {
+    public String loginIn() {
         
-        return "redirect:admin";
+        return "redirect:/";
     }
     
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)

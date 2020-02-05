@@ -15,6 +15,7 @@
 <head>
     <title>Title</title>
     <script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
+    <meta charset="UTF-8">
 </head>
 <body>
 <sec:authorize access="isAuthenticated()">
