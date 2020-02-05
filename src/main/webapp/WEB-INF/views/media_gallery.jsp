@@ -36,6 +36,7 @@
                                 <div class="col-md-55">
                                     <div class="thumbnail">
                                         <div class="image view view-first">
+                                            <a href="/recipe/${recipe.id}">
                                             <c:if test="${not empty recipe.image}">
                                                 <img style="width: 100%; display: block;"
                                                      src="data:image/jpeg;base64,${recipe.imageBuff}" alt="image"/>
@@ -52,9 +53,10 @@
                                                     <%--                                <a href="#"><i class="fa fa-times"></i></a>--%>
                                                     <%--                              </div>--%>
                                             </div>
+                                            </a>
                                         </div>
                                         <div class="caption">
-                                            <a>${recipe.title}</a>
+                                            <a href="/recipe/${recipe.id}">${recipe.title}</a>
                                         </div>
                                     </div>
                                 </div>

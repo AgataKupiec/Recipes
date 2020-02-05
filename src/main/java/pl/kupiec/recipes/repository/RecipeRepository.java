@@ -27,5 +27,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findByTitleLike(String title);
     
     List<Recipe> findByAuthor(User user);
+    
+    @Query(value = "select * from recipes join users_favourite_recipes on id = users_favourite_recipes.favourite_recipes_id", nativeQuery = true)
+    List<Recipe> findByAuthorFavouriteRecipes(Long id);
 
 }

@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.kupiec.recipes.entity.User;
@@ -41,14 +42,14 @@ public class LoginController {
 //    }
     
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-    public String login() {
-        
+    public String login(Model model) {
+        User user = new User();
+        model.addAttribute("user", user);
         return "admin/login_v2";
     }
     
     @RequestMapping(value = {"/login"}, method = RequestMethod.POST)
-    public String loginIn() {
-        
+    public String loginIn(@ModelAttribute(binding = false) User user) {
         return "redirect:/";
     }
     
@@ -57,12 +58,12 @@ public class LoginController {
         return "logout";
     }
     
-    @RequestMapping(value="/registration", method = RequestMethod.GET)
-    public String registration(Model model){
-        User user = new User();
-        model.addAttribute("user", user);
-        return "registration";
-    }
+//    @RequestMapping(value="/registration", method = RequestMethod.GET)
+//    public String registration(Model model){
+//        User user = new User();
+//        model.addAttribute("user", user);
+//        return "registration";
+//    }
     
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String createNewUser(@Valid User user, BindingResult bindingResult, Model model) {

@@ -61,19 +61,18 @@
 
         <div id="register" class="animate form registration_form">
           <section class="login_content">
-            <form>
+            <form:form method="post" modelAttribute="user" action="/registration">
               <h1>Create Account</h1>
               <div>
-                <input type="text" class="form-control" placeholder="Username" required="" />
+                <form:input path="email" type="email" class="form-control" placeholder="E-mail" required="true"></form:input>
+                <form:errors path="email" cssClass="error"/><br>
               </div>
               <div>
-                <input type="email" class="form-control" placeholder="Email" required="" />
+                <form:input path="password" type="password" class="form-control" placeholder="Hasło" required="true" />
+                <form:errors path="password" cssClass="error"/><br>
               </div>
               <div>
-                <input type="password" class="form-control" placeholder="Password" required="" />
-              </div>
-              <div>
-                <a class="btn btn-default submit" href="index.html">Submit</a>
+                <input type="submit" class="btn btn-default submit">Submit</input>
               </div>
 
               <div class="clearfix"></div>
@@ -91,7 +90,7 @@
                   <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
                 </div>
               </div>
-            </form>
+            </form:form>
           </section>
         </div>
       </div>

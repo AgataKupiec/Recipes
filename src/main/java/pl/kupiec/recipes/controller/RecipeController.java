@@ -25,6 +25,9 @@ import pl.kupiec.recipes.storage.StorageService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 public class RecipeController {
@@ -78,6 +81,21 @@ public class RecipeController {
         return "recipesList";
     }
     
+    @GetMapping(value = "/recipe/myRecipes")
+    public String usersRecipeList(Model model) {
+        model.addAttribute("recipes", recipeService.recipesListWithPictures());
+        return "recipesList";
+    }
+    
+    @GetMapping(value = "/recipe/fav")
+    public String usersFavouriteRecipeList(Model model) {
+        List<Recipe> favRecipes = recipeService.favouriteRecipes();
+        List<Recipe> usersRecipes = recipeService.recipesListWithPictures();
+        Set<Recipe> set = Stream.concat(favRecipes.stream(), usersRecipes.stream()).collect(Collectors.toSet());
+        model.addAttribute("recipes", set);
+        return "recipesList";
+    }
+    
     @PostMapping(value = "/recipe/add")
     public String recipeAdd(@Valid Recipe recipe, Model model,
                             @RequestParam("imageInput") MultipartFile file) {
@@ -88,7 +106,7 @@ public class RecipeController {
     
     @GetMapping(value = "/recipe/details/{id}")
     public String recipeDetails(Model model, @PathVariable Long id) {
-        Recipe recipe = recipeService.findRecipe(id);
+        Recipe recipe = recipeService.findRecipeOfLoggedUser(id);
         if (recipe != null) {
             model.addAttribute("recipeAtt", recipe);
             model.addAttribute("recipeProducts", new RecipeProducts());
@@ -116,5 +134,14 @@ public class RecipeController {
         return "redirect:/recipe/details/" + recipeId;
     }
     
+    @GetMapping(value = "/recipe/{id}")
+    public String recipeDetailsShow(Model model, @PathVariable Long id) {
+        Recipe recipe = recipeService.recipeWithPictures(id);
+        if (recipe == null){
+            return "redirect:/";
+        }
+        model.addAttribute("recipe", recipe);
+        return "recipe/details";
+    }
     
 }

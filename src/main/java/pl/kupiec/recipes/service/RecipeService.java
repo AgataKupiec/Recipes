@@ -52,6 +52,28 @@ public class RecipeService {
         return recipes;
     }
     
+    public List<Recipe> favouriteRecipes() {
+        User user = getUserFromContext();
+        List<Recipe> recipes = recipeRepository.findByAuthorFavouriteRecipes(user.getId());
+        recipes.forEach(s -> {
+            if (s.getImage() != null) {
+                s.setImageBuff(storageService.convertImage(s.getImage()));
+            }
+        });
+        return recipes;
+    }
+    
+    public Recipe recipeWithPictures(Long id) {
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+        if (recipe.isEmpty()){
+            return null;
+        }
+        if (recipe.get().getImage() != null) {
+            recipe.get().setImageBuff(storageService.convertImage(recipe.get().getImage()));
+        }
+        return recipe.get();
+    }
+    
     public List<Recipe> allRecipesListWithPictures() {
         List<Recipe> recipes = recipeRepository.findAll();
         recipes.forEach(s -> {
@@ -73,7 +95,7 @@ public class RecipeService {
         
     }
     
-    public Recipe findRecipe(Long recipeId) {
+    public Recipe findRecipeOfLoggedUser(Long recipeId) {
         Optional<Recipe> recipe = recipeRepository.findById(recipeId);
         if (recipe.isEmpty()) {
             return null;
@@ -86,7 +108,7 @@ public class RecipeService {
     }
     
     public void deleteProductFromRecipe(Long recipeId, Long recipeProductId) {
-        if (findRecipe(recipeId) == null) {
+        if (findRecipeOfLoggedUser(recipeId) == null) {
             return;
         }
         Optional<RecipeProducts> recipeProduct = recipeProductsRepository.findById(recipeProductId);
