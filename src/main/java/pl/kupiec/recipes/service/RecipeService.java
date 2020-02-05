@@ -1,5 +1,7 @@
 package pl.kupiec.recipes.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +16,6 @@ import pl.kupiec.recipes.repository.UnitRepository;
 import pl.kupiec.recipes.repository.UserRepository;
 import pl.kupiec.recipes.storage.StorageService;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,9 +42,9 @@ public class RecipeService {
         this.userRepository = userRepository;
     }
     
-    public List<Recipe> recipesListWithPictures() {
+    public Page<Recipe> recipesListWithPictures(Pageable pageable) {
         User user = getUserFromContext();
-        List<Recipe> recipes = recipeRepository.findByAuthor(user);
+        Page<Recipe> recipes = recipeRepository.findByAuthor(user, pageable);
         recipes.forEach(s -> {
             if (s.getImage() != null) {
                 s.setImageBuff(storageService.convertImage(s.getImage()));
@@ -52,9 +53,9 @@ public class RecipeService {
         return recipes;
     }
     
-    public List<Recipe> favouriteRecipes() {
+    public Page<Recipe> favAndOwnRecipesPageWithPictures(Pageable pageable) {
         User user = getUserFromContext();
-        List<Recipe> recipes = recipeRepository.findByAuthorFavouriteRecipes(user.getId());
+        Page<Recipe> recipes = recipeRepository.findFavouriteAndOwnRecipes(user.getId(), pageable);
         recipes.forEach(s -> {
             if (s.getImage() != null) {
                 s.setImageBuff(storageService.convertImage(s.getImage()));
@@ -62,6 +63,19 @@ public class RecipeService {
         });
         return recipes;
     }
+    
+    
+    
+//    public List<Recipe> favouriteRecipes() {
+//        User user = getUserFromContext();
+//        List<Recipe> recipes = recipeRepository.findByAuthorFavouriteRecipes(user.getId());
+//        recipes.forEach(s -> {
+//            if (s.getImage() != null) {
+//                s.setImageBuff(storageService.convertImage(s.getImage()));
+//            }
+//        });
+//        return recipes;
+//    }
     
     public Recipe recipeWithPictures(Long id) {
         Optional<Recipe> recipe = recipeRepository.findById(id);
@@ -74,8 +88,8 @@ public class RecipeService {
         return recipe.get();
     }
     
-    public List<Recipe> allRecipesListWithPictures() {
-        List<Recipe> recipes = recipeRepository.findAll();
+    public Page<Recipe> allRecipesListWithPictures(Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.findAll(pageable);
         recipes.forEach(s -> {
             if (s.getImage() != null) {
                 s.setImageBuff(storageService.convertImage(s.getImage()));

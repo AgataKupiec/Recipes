@@ -1,5 +1,7 @@
 package pl.kupiec.recipes.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,9 +27,6 @@ import pl.kupiec.recipes.storage.StorageService;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Controller
 public class RecipeController {
@@ -75,24 +74,32 @@ public class RecipeController {
     }
     
     @GetMapping(value = "/recipe/list")
-    public String recipeList(Model model) {
-        model.addAttribute("recipes", recipeService.recipesListWithPictures());
+    public String recipeListPaged(Model model, Pageable pageable) {
+        Page<Recipe> page = recipeService.recipesListWithPictures(pageable);
+        model.addAttribute("recipes", page);
 //        return "recipe/userRecipes";
         return "recipesList";
     }
     
+//    @GetMapping("/list")
+//    public String listPaged(Model model, Pageable pageable) {
+//        Page<Drink> page = drinkRepository.findAll(pageable);
+//        model.addAttribute("page", page);
+//        return "drink/list";
+//    }
+    
+    
+    
     @GetMapping(value = "/recipe/myRecipes")
-    public String usersRecipeList(Model model) {
-        model.addAttribute("recipes", recipeService.recipesListWithPictures());
+    public String usersRecipeList(Model model, Pageable pageable) {
+        model.addAttribute("recipes", recipeService.recipesListWithPictures(pageable));
         return "recipesList";
     }
     
     @GetMapping(value = "/recipe/fav")
-    public String usersFavouriteRecipeList(Model model) {
-        List<Recipe> favRecipes = recipeService.favouriteRecipes();
-        List<Recipe> usersRecipes = recipeService.recipesListWithPictures();
-        Set<Recipe> set = Stream.concat(favRecipes.stream(), usersRecipes.stream()).collect(Collectors.toSet());
-        model.addAttribute("recipes", set);
+    public String usersFavouriteRecipeList(Model model, Pageable pageable) {
+        Page<Recipe> favRecipes = recipeService.favAndOwnRecipesPageWithPictures(pageable);
+        model.addAttribute("recipes", favRecipes);
         return "recipesList";
     }
     

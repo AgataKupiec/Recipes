@@ -7,8 +7,8 @@
                     <li><a href="/recipe/myRecipes">Moje przepisy</a></li>
                     <li><a href="/recipe/fav">Moje i ulubione</a></li>
                     <li><a href="">Zaawansowane wyszukiwanie</a></li>
-                    <li><a href="">Dodaj przepis</a></li>
-                    <li><a href="">Edycja</a></li>
+                    <li><a href="/recipe/add">Dodaj przepis</a></li>
+                    <li><a href="/recipe/edit">Edycja</a></li>
 <%--                    <li><a href="index3.html">Dashboard3</a></li>--%>
                 </ul>
             </li>

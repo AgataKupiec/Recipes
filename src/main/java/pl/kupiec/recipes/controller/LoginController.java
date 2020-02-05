@@ -33,14 +33,6 @@ public class LoginController {
     private final RoleRepository roleRepository;
     private final UserDetailsService userDetailsService;
     
-//    @GetMapping("/admin")
-//    @ResponseBody
-//    public String userInfo(ModelMap modelMap, Principal principal) {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String name = principal.getName();
-//        return name;
-//    }
-    
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public String login(Model model) {
         User user = new User();
@@ -55,15 +47,9 @@ public class LoginController {
     
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
     public String logout() {
-        return "logout";
+        return "redirect:/";
     }
     
-//    @RequestMapping(value="/registration", method = RequestMethod.GET)
-//    public String registration(Model model){
-//        User user = new User();
-//        model.addAttribute("user", user);
-//        return "registration";
-//    }
     
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String createNewUser(@Valid User user, BindingResult bindingResult, Model model) {

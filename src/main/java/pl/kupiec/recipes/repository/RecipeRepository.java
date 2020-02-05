@@ -1,5 +1,7 @@
 package pl.kupiec.recipes.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,9 +28,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     
     List<Recipe> findByTitleLike(String title);
     
-    List<Recipe> findByAuthor(User user);
+    Page<Recipe> findByAuthor(User author, Pageable pageable);
     
-    @Query(value = "select * from recipes join users_favourite_recipes on id = users_favourite_recipes.favourite_recipes_id", nativeQuery = true)
-    List<Recipe> findByAuthorFavouriteRecipes(Long id);
+//    @Query(value = "select * from recipes join users_favourite_recipes on id = users_favourite_recipes.favourite_recipes_id", nativeQuery = true)
+//    List<Recipe> findByAuthorFavouriteRecipes(Long id);
+    
+    @Query(value ="select distinct * from recipes left join users_favourite_recipes ufr on recipes.id = ufr.favourite_recipes_id where ufr.user_id = :author_id or recipes.recipes.author_id = :author_id", nativeQuery = true)
+    Page<Recipe> findFavouriteAndOwnRecipes(@Param("author_id")Long authorId, Pageable pageable);
 
 }
