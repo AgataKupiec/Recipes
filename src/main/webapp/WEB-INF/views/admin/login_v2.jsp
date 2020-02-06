@@ -44,7 +44,7 @@
 
               <div class="separator">
                 <p class="change_link">Chiałbyś założyć konto?
-                  <a href="#signup" class="to_register"> Zarejestruj sięt </a>
+                  <a href="#signup" class="to_register"> Zarejestruj się </a>
                 </p>
 
                 <div class="clearfix"></div>
@@ -72,7 +72,7 @@
                 <form:errors path="password" cssClass="error"/><br>
               </div>
               <div>
-                <input type="submit" class="btn btn-default submit">Submit</input>
+                <input type="submit" class="btn btn-default submit"/>
               </div>
 
               <div class="clearfix"></div>

@@ -22,5 +22,11 @@
 <link href="<c:url value ="/resources/vendors/bootstrap-daterangepicker/daterangepicker.css" />" rel="stylesheet"
       type="text/css">
 
+<link href="<c:url value ="/resources/vendors/animate.css/animate.min.css" />" rel="stylesheet">
+
 <!-- Custom Theme Style -->
 <link href="<c:url value ="/resources/css/custom.min.css" />" rel="stylesheet" type="text/css">
+
+<%--<script src="<c:url value="/resources/vendors/jquery/dist/jquery.min.js" />"></script>--%>
+
+<%--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>--%>

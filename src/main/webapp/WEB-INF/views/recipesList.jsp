@@ -43,8 +43,8 @@
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="index.html" class="site_title"><i class="fa fa-cutlery"></i>
-                        <span>Twoje przepisy!</span></a>
+                    <a href="/" class="site_title"><i class="fa fa-cutlery"></i>
+                        <span>Przepisy Agaty!</span></a>
                 </div>
 
                 <div class="clearfix"></div>

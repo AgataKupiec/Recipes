@@ -4,6 +4,8 @@
 
 <!-- jQuery -->
 <script src="<c:url value="/resources/vendors/jquery/dist/jquery.min.js" />"></script>
+<script src="<c:url value="/resources/vendors/devbridge-autocomplete/src/jquery.autocomplete.js" />"></script>
+
 <!-- Bootstrap -->
 <script src="<c:url value="/resources/vendors/bootstrap/dist/js/bootstrap.min.js" />"></script>
 <!-- FastClick -->
@@ -41,4 +43,4 @@
 <script src="<c:url value="/resources/vendors/bootstrap-daterangepicker/daterangepicker.js" />"></script>
 
 <!-- Custom Theme Scripts -->
-<script src="<c:url value="/resources/js/custom.min.js" />"></script>
+<script src="<c:url value="/resources/js/custom.js" />"></script>

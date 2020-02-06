@@ -42,4 +42,9 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
     
+    @Override
+    public boolean checkIfUserExists(User user){
+        return userRepository.existsByEmail(user.getEmail());
+    }
+    
 }

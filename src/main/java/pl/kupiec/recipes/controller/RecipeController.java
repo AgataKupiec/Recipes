@@ -70,7 +70,7 @@ public class RecipeController {
     public String recipeForm(Model model) {
         Recipe recipe = new Recipe();
         model.addAttribute("recipe", recipe);
-        return "recipe/addRecipe";
+        return "recipe/addRecipeForm";
     }
     
     @GetMapping(value = "/recipe/list")

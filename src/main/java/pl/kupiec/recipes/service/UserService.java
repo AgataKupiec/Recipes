@@ -7,4 +7,6 @@ public interface UserService {
     User findByEmail(String email);
     
     void saveUser(User user);
+    
+    boolean checkIfUserExists(User user);
 }

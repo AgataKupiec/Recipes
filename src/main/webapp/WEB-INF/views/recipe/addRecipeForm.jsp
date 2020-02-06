@@ -5,17 +5,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Przepisy Agaty</title>
+    <title>Gentelella Alela! | </title>
     <!-- Custom fonts for this template-->
     <!-- Bootstrap -->
     <%@include file="../styles.jsp" %>
+    <script src="https://cdn.ckeditor.com/ckeditor5/16.0.0/classic/ckeditor.js"></script>
+
+
+
 </head>
 
 <body class="nav-md">
@@ -40,9 +44,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
 
-
-                        //tu dodaj plik jsp
-                        <%@include file=".jsp" %>
+                        <%@include file="formAddRecipe.jsp" %>
 
                     </div>
                 </div>
@@ -58,5 +60,17 @@
     </footer>
 </div>
 <%@include file="../scripts.jsp" %>
+<script>
+    ClassicEditor
+        .create( document.querySelector('#editor'))
+        .catch( error => {
+        console.error( error );
+    });
+</script>
+<%--<script src="<c:url value="/resources/js/jquery/bootstrap-input-spinner.js" />"></script>--%>
+<%--<script>--%>
+<%--    $("input[type='number']").inputSpinner()--%>
+<%--</script>--%>
+
 </body>
 </html>

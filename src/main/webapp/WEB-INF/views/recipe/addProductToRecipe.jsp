@@ -9,11 +9,23 @@
 <%@ taglib prefix="form"
            uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Title</title>
+<%--    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>--%>
+    <script src="<c:url value="/resources/vendors/jquery/dist/jquery.min.js" />"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+    <script type="text/javascript">// <![CDATA[
+    function inputFocus(i){
+        if(i.value==i.defaultValue){ i.value=""; i.style.color="#000"; }
+    }
+    function inputBlur(i){
+        if(i.value==""){ i.value=i.defaultValue; i.style.color="#848484"; }
+    }
+    // ]]></script>
 </head>
 <body>
 <sec:authorize access="isAuthenticated()">
@@ -37,9 +49,13 @@
             <tr>
 
                 <td>
-                    <form:select path="product" multiple="false">
-                        <form:options items="${products}" itemLabel="name" itemValue="id"/>
-                    </form:select>
+                    <div class="ui-widget">
+                        <form:input path="product" id="autocomplete-custom-append" type="text" name="tagQuery" onFocus="inputFocus(this)" onBlur="inputBlur(this)"/>
+                    </div>
+
+<%--                    <form:select path="product" multiple="false">--%>
+<%--                        <form:options items="${products}" itemLabel="name" itemValue="id"/>--%>
+<%--                    </form:select>--%>
                     <form:errors path="product" cssClass="error"/><br>
                 </td>
                 <td>
@@ -61,7 +77,7 @@
     <p>${recipeAtt.content}</p>
 
 </sec:authorize>
-
+<script src="<c:url value="/resources/js/custom.js" />"></script>
 
 </body>
 </html>

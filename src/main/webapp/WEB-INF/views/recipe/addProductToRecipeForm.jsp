@@ -5,17 +5,39 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Przepisy Agaty</title>
+    <title>Gentelella Alela! | </title>
     <!-- Custom fonts for this template-->
     <!-- Bootstrap -->
     <%@include file="../styles.jsp" %>
+
+    <script>
+        $(function() {
+            $("#searchBox").autocomplete({
+                source : function(request, response) {
+                    $.ajax({
+                        url : "http://localhost:8080/getProducts",
+                        dataType : "json",
+                        data : {
+                            q : request.term
+                        },
+                        success : function(data) {
+                            //alert(data);
+                            console.log(data);
+                            response(data);
+                        }
+                    });
+                },
+                minLength : 2
+            });
+        });
+    </script>
 </head>
 
 <body class="nav-md">
@@ -40,9 +62,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
 
-
-                        //tu dodaj plik jsp
-                        <%@include file=".jsp" %>
+                        <%@include file="formAddProduct.jsp" %>
 
                     </div>
                 </div>
@@ -58,5 +78,10 @@
     </footer>
 </div>
 <%@include file="../scripts.jsp" %>
+
+<script src="./src/bootstrap-input-spinner.js"></script>
+<script>
+    $("input[type='number']").inputSpinner()
+</script>
 </body>
 </html>

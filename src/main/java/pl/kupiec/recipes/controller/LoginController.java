@@ -54,21 +54,20 @@ public class LoginController {
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String createNewUser(@Valid User user, BindingResult bindingResult, Model model) {
         
-        User userExists = userService.findByEmail(user.getEmail());
-        if (userExists != null) {
+        boolean userExists = userService.checkIfUserExists(user);
+        if (userExists) {
             bindingResult
                     .rejectValue("email", "error.user",
-                            "There is already a user registered with the user e-mail provided");
+                            "Użytkownik o takim adresie już istnieje");
         }
         if (bindingResult.hasErrors()) {
-            return "registration";
+            return "redirect:/login";
         } else {
             userService.saveUser(user);
         }
         user = userService.findByEmail(user.getEmail());
         model.addAttribute("user", user);
-        return "registration";
+        return "redirect:/login";
     }
     
-
 }
