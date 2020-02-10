@@ -9,4 +9,7 @@ public interface UserService {
     void saveUser(User user);
     
     boolean checkIfUserExists(User user);
+    
+    User getUserFromContext();
+    
 }

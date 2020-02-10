@@ -33,6 +33,7 @@ create table recipes
     time      smallint unsigned,
     vege      boolean default false,
     vegan     boolean default false,
+    image     text,
     primary key (id),
     foreign key (author_id) references users (id)
 );
@@ -61,21 +62,53 @@ create table users_available_products
 (
     user_id               int unsigned,
     available_products_id int unsigned,
-    primary key (user_id, available_products_id)
+    primary key (user_id, available_products_id),
+    foreign key (available_products_id) references recipes (id),
+    foreign key (user_id) references users (id)
+
 );
 
 create table users_eliminated_products
 (
     user_id                int unsigned,
     eliminated_products_id int unsigned,
-    primary key (user_id, eliminated_products_id)
+    primary key (user_id, eliminated_products_id),
+    foreign key (eliminated_products_id) references recipes (id),
+    foreign key (user_id) references users (id)
 );
 
-create table users_favourite_products
+create table users_favourite_recipes
 (
     user_id             int unsigned,
     favourie_recipes_id int unsigned,
-    primary key (user_id, favourie_recipes_id)
+    primary key (user_id, favourie_recipes_id),
+    foreign key (favourie_recipes_id) references recipes (id),
+    foreign key (user_id) references users (id)
 );
 
+create table products_units
+(
+    id         int auto_increment not null,
+    factor     decimal(3, 2),
+    product_id int unsigned,
+    unit_id    int unsigned,
+    primary key (id),
+    foreign key (product_id) references products (id),
+    foreign key (unit_id) references units (id)
+);
 
+create table roles
+(
+    id   int auto_increment not null,
+    role varchar(255),
+    primary key (id)
+);
+
+create table user_role
+(
+    user_id bigint,
+    role_id int,
+    primary key (user_id, role_id),
+    foreign key (user_id) references recipes.users (id),
+    foreign key (role_id) references recipes.roles (id)
+);

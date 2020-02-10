@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- page content -->
         <div role="main">
             <div class="page-title">

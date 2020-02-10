@@ -20,7 +20,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/about").authenticated()
                 .and().formLogin().loginPage("/login")
                 .and().logout().logoutSuccessUrl("/")
-                .permitAll();
+                .permitAll()
+                .and().exceptionHandling().accessDeniedPage("/403")
+                .and().exceptionHandling().accessDeniedPage("/404")
+                .and().exceptionHandling().accessDeniedPage("/500");
     }
     
     
@@ -28,7 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
     
     
 }

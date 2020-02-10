@@ -48,15 +48,15 @@ public class User {
     
     private Boolean vegan;
     
-    @OrderBy ("name")
+    @OrderBy("name")
     @ManyToMany
     private Set<Product> eliminatedProducts;
     
-    @OrderBy ("title")
+    @OrderBy("title")
     @ManyToMany
     private Set<Recipe> favouriteRecipes = new HashSet<>();
     
-    @OrderBy ("name")
+    @OrderBy("name")
     @ManyToMany
     private Set<Product> availableProducts = new HashSet<>();
     

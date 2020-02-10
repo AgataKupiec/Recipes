@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="top_nav">
     <div class="nav_menu">
         <nav>
@@ -15,8 +16,8 @@
                             <span class=" fa fa-angle-down"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-usermenu pull-right">
-                            <li><a href="javascript:;"> Profile</a></li>
-                            <li><a href="javascript:;">Settings</a></li>
+                            <li><a href="/chef/profile"> Profil</a></li>
+                            <li><a href="javascript:;">Ustawienia</a></li>
                             <li>
                                 <form action="<c:url value="/logout"/>" method="post">
                                     <i class="fa fa-sign-out pull-right"></i>

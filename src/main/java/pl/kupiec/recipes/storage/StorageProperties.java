@@ -9,7 +9,7 @@ public class StorageProperties {
     /**
      * Folder location for storing files
      */
-    private String location = "/home/agata/CodersLab/img";
+    private String location;
     
     public String getLocation() {
         return location;

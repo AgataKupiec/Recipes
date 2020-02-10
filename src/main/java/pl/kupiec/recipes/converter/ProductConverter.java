@@ -5,6 +5,8 @@ import org.springframework.core.convert.converter.Converter;
 import pl.kupiec.recipes.entity.Product;
 import pl.kupiec.recipes.repository.ProductRepository;
 
+import java.util.Optional;
+
 public class ProductConverter implements Converter<String, Product> {
     @Autowired
     private ProductRepository productRepository;
@@ -14,7 +16,7 @@ public class ProductConverter implements Converter<String, Product> {
         if (s.trim().equals("0") || s.trim().equals("")) {
             return null;
         }
-        Product product = productRepository.findById(Long.parseLong(s)).get();
-        return product;
+        Optional<Product> product = productRepository.findById(Long.parseLong(s));
+        return product.orElse(null);
     }
 }

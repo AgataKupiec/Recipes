@@ -25,13 +25,7 @@ public class FileUploadController {
     }
     
     @GetMapping("/image")
-    public String listUploadedFiles(){
-        
-//        model.addAttribute("files", storageService.loadAll().map(
-//                path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
-//                        "serveFile", path.getFileName().toString()).build().toString())
-//                .collect(Collectors.toList()));
-//
+    public String listUploadedFiles() {
         return "uploadForm";
     }
     
@@ -50,10 +44,6 @@ public class FileUploadController {
                                    RedirectAttributes redirectAttributes) {
         
         storageService.store(file);
-        
-//        redirectAttributes.addFlashAttribute("message",
-//                "You successfully uploaded " + file.getOriginalFilename() + "!");
-//
         return file.getName();
     }
     

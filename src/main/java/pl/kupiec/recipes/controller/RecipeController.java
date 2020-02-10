@@ -2,6 +2,7 @@ package pl.kupiec.recipes.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +19,6 @@ import pl.kupiec.recipes.entity.Recipe;
 import pl.kupiec.recipes.entity.RecipeProducts;
 import pl.kupiec.recipes.entity.Unit;
 import pl.kupiec.recipes.repository.ProductRepository;
-import pl.kupiec.recipes.repository.RecipeProductsRepository;
-import pl.kupiec.recipes.repository.RecipeRepository;
 import pl.kupiec.recipes.repository.UnitRepository;
 import pl.kupiec.recipes.repository.UserRepository;
 import pl.kupiec.recipes.service.RecipeService;
@@ -31,28 +30,22 @@ import java.util.List;
 @Controller
 public class RecipeController {
     
-    private final StorageService storageService;
-    private final RecipeProductsRepository recipeProductsRepository;
-    private final RecipeRepository recipeRepository;
     private final ProductRepository productRepository;
     private final UnitRepository unitRepository;
-    private final UserRepository userRepository;
     private final RecipeService recipeService;
     
-    public RecipeController(RecipeProductsRepository recipeProductsRepository,
-                            RecipeRepository recipeRepository,
-                            ProductRepository productRepository,
+    public RecipeController(ProductRepository productRepository,
                             UnitRepository unitRepository,
-                            UserRepository userRepository,
-                            StorageService storageService,
                             RecipeService recipeService) {
-        this.recipeProductsRepository = recipeProductsRepository;
-        this.recipeRepository = recipeRepository;
         this.productRepository = productRepository;
         this.unitRepository = unitRepository;
-        this.userRepository = userRepository;
-        this.storageService = storageService;
         this.recipeService = recipeService;
+    }
+    
+    @GetMapping("/")
+    public String home(Model model, Pageable pageable) {
+        model.addAttribute("recipes", recipeService.allRecipesListWithPictures(pageable));
+        return "index";
     }
     
     @ModelAttribute("units")
@@ -65,37 +58,21 @@ public class RecipeController {
         return productRepository.findAll();
     }
     
-    
-    @GetMapping(value = "/recipe/add")
-    public String recipeForm(Model model) {
-        Recipe recipe = new Recipe();
-        model.addAttribute("recipe", recipe);
-        return "recipe/addRecipeForm";
-    }
-    
     @GetMapping(value = "/recipe/list")
     public String recipeListPaged(Model model, Pageable pageable) {
         Page<Recipe> page = recipeService.recipesListWithPictures(pageable);
         model.addAttribute("recipes", page);
-//        return "recipe/userRecipes";
         return "recipesList";
     }
     
-//    @GetMapping("/list")
-//    public String listPaged(Model model, Pageable pageable) {
-//        Page<Drink> page = drinkRepository.findAll(pageable);
-//        model.addAttribute("page", page);
-//        return "drink/list";
-//    }
-    
-    
-    
+    @Secured("ROLE_USER")
     @GetMapping(value = "/recipe/myRecipes")
     public String usersRecipeList(Model model, Pageable pageable) {
         model.addAttribute("recipes", recipeService.recipesListWithPictures(pageable));
         return "recipesList";
     }
     
+    @Secured("ROLE_USER")
     @GetMapping(value = "/recipe/fav")
     public String usersFavouriteRecipeList(Model model, Pageable pageable) {
         Page<Recipe> favRecipes = recipeService.favAndOwnRecipesPageWithPictures(pageable);
@@ -103,6 +80,16 @@ public class RecipeController {
         return "recipesList";
     }
     
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/recipe/add")
+    public String recipeForm(Model model) {
+        Recipe recipe = new Recipe();
+        model.addAttribute("recipe", recipe);
+        return "recipe/addRecipeForm";
+    }
+    
+    
+    @Secured("ROLE_USER")
     @PostMapping(value = "/recipe/add")
     public String recipeAdd(@Valid Recipe recipe, Model model,
                             @RequestParam("imageInput") MultipartFile file) {
@@ -111,11 +98,36 @@ public class RecipeController {
         return "redirect:/recipe/details/" + recipe.getId();
     }
     
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/recipe/edit")
+    public String editRecipes(Model model, Pageable pageable) {
+        model.addAttribute("recipes", recipeService.recipesListWithPictures(pageable));
+        return "recipe/userRecipesPanel";
+    }
+    
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/recipe/addProduct", method = RequestMethod.POST)
+    public String addProductToRecipe(@Valid RecipeProducts product, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors() && product != null) {
+            recipeService.addProductToRecipe(product);
+        }
+        return "redirect:details/" + product.getRecipe().getId();
+    }
+    
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/recipe/{recipeId}/delProduct/{recipeProductId}", method = RequestMethod.GET)
+    public String deleteProductFromRecipe(@PathVariable Long recipeId,
+                                      @PathVariable Long recipeProductId) {
+        
+        recipeService.deleteProductFromRecipe(recipeId, recipeProductId);
+        return "redirect:/recipe/details/" + recipeId;
+    }
+    
     @GetMapping(value = "/recipe/details/{id}")
     public String recipeDetails(Model model, @PathVariable Long id) {
-        Recipe recipe = recipeService.findRecipeOfLoggedUser(id);
+        Recipe recipe = recipeService.getRecipeOfLoggedUserWithPicture(id);
         if (recipe != null) {
-            model.addAttribute("recipeAtt", recipe);
+            model.addAttribute("recipe", recipe);
             model.addAttribute("recipeProducts", new RecipeProducts());
             model.addAttribute("products", productRepository.findAll());
             model.addAttribute("units", unitRepository.findAll());
@@ -124,31 +136,42 @@ public class RecipeController {
         return "redirect:/recipe/list";
     }
     
-    @RequestMapping(value = "/recipe/addProduct", method = RequestMethod.POST)
-    public String recipeAddProduct(@Valid RecipeProducts product, BindingResult bindingResult) {
-        
-        if (!recipeProductsRepository.existsByProductAndRecipe(product.getProduct(), product.getRecipe())) {
-            recipeProductsRepository.save(product);
-        }
-        return "redirect:details/" + product.getRecipe().getId();
-    }
-    
-    @RequestMapping(value = "/recipe/{recipeId}/delProduct/{recipeProductId}", method = RequestMethod.GET)
-    public String recipeDeleteProduct(@PathVariable Long recipeId,
-                                      @PathVariable Long recipeProductId) {
-        
-        recipeService.deleteProductFromRecipe(recipeId, recipeProductId);
-        return "redirect:/recipe/details/" + recipeId;
-    }
-    
     @GetMapping(value = "/recipe/{id}")
     public String recipeDetailsShow(Model model, @PathVariable Long id) {
-        Recipe recipe = recipeService.recipeWithPictures(id);
-        if (recipe == null){
+        Recipe recipe = recipeService.recipeWithPictureById(id);
+        if (recipe == null) {
             return "redirect:/";
         }
         model.addAttribute("recipe", recipe);
         return "recipe/details";
+    }
+    
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/recipe/edit/{recipeId}")
+    public String editRecipeForm(Model model, @PathVariable Long recipeId) {
+        Recipe recipe = recipeService.getRecipeOfLoggedUserWithPicture(recipeId);
+        if (recipe == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("recipe", recipe);
+        return "recipe/editRecipe";
+    }
+    
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/recipe/delete/{recipeId}")
+    public String deleteRecipe(Model model, @PathVariable Long recipeId) {
+        recipeService.deleteRecipe(recipeId);
+        return "redirect:/recipe/edit";
+        
+    }
+    
+    @Secured("ROLE_USER")
+    @PostMapping(value = "/recipe/edit")
+    public String editRecipe(@Valid Recipe recipe, @RequestParam("imageInput") MultipartFile file, BindingResult result) {
+        if (!result.hasErrors()) {
+            recipeService.updateRecipe(recipe, file);
+        }
+        return "redirect:/recipe/edit";
     }
     
 }

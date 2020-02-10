@@ -1,11 +1,10 @@
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
+<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
 
 <!-- jQuery -->
 <script src="<c:url value="/resources/vendors/jquery/dist/jquery.min.js" />"></script>
 <script src="<c:url value="/resources/vendors/devbridge-autocomplete/src/jquery.autocomplete.js" />"></script>
-
 <!-- Bootstrap -->
 <script src="<c:url value="/resources/vendors/bootstrap/dist/js/bootstrap.min.js" />"></script>
 <!-- FastClick -->
@@ -34,13 +33,14 @@
 <script src="<c:url value="/resources/vendors/flot.curvedlines/curvedLines.js" />"></script>
 <!-- DateJS -->
 <script src="<c:url value="/resources/vendors/DateJS/build/date.js" />"></script>
-<!-- JQVMap -->
+<%--<!-- JQVMap -->--%>
 <script src="<c:url value="/resources/vendors/jqvmap/dist/jquery.vmap.js" />"></script>
 <script src="<c:url value="/resources/vendors/jqvmap/dist/maps/jquery.vmap.world.js" />"></script>
 <script src="<c:url value="/resources/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js" />"></script>
-<!-- bootstrap-daterangepicker -->
+<%--<!-- bootstrap-daterangepicker -->--%>
 <script src="<c:url value="/resources/vendors/moment/min/moment.min.js" />"></script>
 <script src="<c:url value="/resources/vendors/bootstrap-daterangepicker/daterangepicker.js" />"></script>
 
 <!-- Custom Theme Scripts -->
 <script src="<c:url value="/resources/js/custom.js" />"></script>
+<script src="<c:url value="/resources/js/main.js" />"></script>

@@ -13,6 +13,10 @@ public class WebAppConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("admin/login");
+        registry.addViewController("/403").setViewName("403");
+        registry.addViewController("/404").setViewName("404");
+        registry.addViewController("/500").setViewName("500");
+        
     }
     
     @Override
@@ -21,10 +25,12 @@ public class WebAppConfig implements WebMvcConfigurer {
         registry.addConverter(getProductConverter());
         registry.addConverter(getUnitConverter());
     }
+    
     @Bean
     public ProductConverter getProductConverter() {
         return new ProductConverter();
     }
+    
     @Bean
     public UnitConverter getUnitConverter() {
         return new UnitConverter();

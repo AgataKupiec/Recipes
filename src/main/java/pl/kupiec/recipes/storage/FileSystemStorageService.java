@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +17,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.Base64;
-import java.util.stream.Stream;
 
 @Service
 public class FileSystemStorageService implements StorageService {
@@ -63,18 +61,6 @@ public class FileSystemStorageService implements StorageService {
     }
     
     @Override
-    public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.rootLocation, 1)
-                    .filter(path -> !path.equals(this.rootLocation))
-                    .map(this.rootLocation::relativize);
-        } catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
-        }
-        
-    }
-    
-    @Override
     public Path load(String filename) {
         return rootLocation.resolve(filename);
     }
@@ -97,11 +83,6 @@ public class FileSystemStorageService implements StorageService {
     }
     
     @Override
-    public void deleteAll() {
-        FileSystemUtils.deleteRecursively(rootLocation.toFile());
-    }
-    
-    @Override
     public void init() {
         try {
             Files.createDirectories(rootLocation);
@@ -120,5 +101,17 @@ public class FileSystemStorageService implements StorageService {
             e.printStackTrace();
         }
         return Base64.getEncoder().encodeToString(fileContent);
+    }
+    
+    @Override
+    public void delete(String filePath) {
+        Path fullFilePath = Path.of("/" + rootLocation + filePath);
+        if (Files.exists(fullFilePath)) {
+            try {
+                Files.delete(fullFilePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

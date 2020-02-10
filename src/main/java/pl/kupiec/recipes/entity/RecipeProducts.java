@@ -20,7 +20,7 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table (name = "recipes_products", uniqueConstraints={
+@Table(name = "recipes_products", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"product_id", "recipe_id"})})
 public class RecipeProducts {
     @Id
