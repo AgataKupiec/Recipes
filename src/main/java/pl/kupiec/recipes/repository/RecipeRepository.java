@@ -31,6 +31,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query(value = "select * from recipes left join users_favourite_recipes ufr on recipes.id = ufr.favourite_recipes_id where ufr.user_id = :author_id or recipes.recipes.author_id = :author_id", nativeQuery = true)
     Page<Recipe> findFavouriteAndOwnRecipes(@Param("author_id") Long authorId, Pageable pageable);
     
-    List<Integer> findRecipeIdByAuthorFavouriteRecipes(User user);
+    @Query(value = "select * from recipes join users_favourite_recipes ufr on recipes.id = ufr.favourite_recipes_id where ufr.user_id = :user_id", nativeQuery = true)
+    Page<Recipe> findFavouriteRecipes(@Param("user_id") Long userId, Pageable pageable);
+    
+    
     
 }

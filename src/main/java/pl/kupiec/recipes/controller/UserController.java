@@ -1,5 +1,6 @@
 package pl.kupiec.recipes.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Slf4j
 @Controller
+@AllArgsConstructor
 @Secured("ROLE_USER")
 @RequestMapping("/chef")
 public class UserController {
@@ -27,15 +29,8 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
     
-    public UserController(ProductRepository productRepository,
-                          UserRepository userRepository,
-                          UserService userService) {
-        this.productRepository = productRepository;
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
     
-    @GetMapping("/profile")
+    @GetMapping("profile")
     public String userDetails(Model model, Principal principal) {
         User currUser = userRepository.findByEmail(principal.getName());
         Product product = new Product();
@@ -45,7 +40,7 @@ public class UserController {
         return "user/details";
     }
     
-    @GetMapping("/eliminateProduct/remove/{id}")
+    @GetMapping("eliminateProduct/remove/{id}")
     public String removeEliminatedProduct(Principal principal, @PathVariable Long id) {
         User currUser = userRepository.findByEmail(principal.getName());
         Optional<Product> product = productRepository.findById(id);
@@ -56,7 +51,7 @@ public class UserController {
         return "redirect:/chef/profile";
     }
     
-    @GetMapping("/eliminateProduct/add")
+    @GetMapping("eliminateProduct/add")
     public String addEliminatedProduct(@RequestParam Long productId, Principal principal) {
         User currUser = userRepository.findByEmail(principal.getName());
         Optional<Product> product = productRepository.findById(productId);
@@ -67,7 +62,7 @@ public class UserController {
         return "redirect:/chef/profile";
     }
     
-    @GetMapping("/availableProduct/remove/{id}")
+    @GetMapping("availableProduct/remove/{id}")
     public String removeAvailableProduct(@PathVariable Long id) {
         User currUser = userService.getUserFromContext();
         Optional<Product> product = productRepository.findById(id);
@@ -78,7 +73,7 @@ public class UserController {
         return "redirect:/chef/profile";
     }
     
-    @GetMapping("/availableProduct/add")
+    @GetMapping("availableProduct/add")
     public String addAvailableProduct(@RequestParam Long productId, Principal principal) {
         User currUser = userRepository.findByEmail(principal.getName());
         Optional<Product> product = productRepository.findById(productId);
@@ -88,5 +83,7 @@ public class UserController {
         }
         return "redirect:/chef/profile";
     }
+    
+    
     
 }

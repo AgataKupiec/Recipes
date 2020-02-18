@@ -1,6 +1,6 @@
 package pl.kupiec.recipes.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,21 +13,13 @@ import pl.kupiec.recipes.repository.UserRepository;
 import java.util.Collections;
 import java.util.HashSet;
 
+@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
     
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder passwordEncoder;
-    
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           BCryptPasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
     
     @Override
     public User findByEmail(String email) {

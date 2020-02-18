@@ -32,13 +32,12 @@
                                 <td>
                                     <div class="ui-widget">
                                         <input id="tagQuery" type="text" name="tagQuery"
-                                               value="<spring:message code=" />" onFocus="inputFocus(this)" onBlur="inputBlur(this)"/>
+                                               value="<spring:message code=" />" onFocus="inputFocus(this)" onBlur="inputBlur(this)"/>"/>
                                             </div>
 
 
                                         <form:input path="product" type="text" name="search" id="searchBox" class="form-control col-md-10"/>
-<%--                                            <form:options items="${products}" itemLabel="name" itemValue="id"/>--%>
-<%--                                        </form:input>--%>
+
                                         <form:errors path="product" cssClass="error"/><br>
                                     </td>
                                     <td>

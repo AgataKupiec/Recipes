@@ -1,5 +1,7 @@
 package pl.kupiec.recipes.service;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import pl.kupiec.recipes.storage.StorageService;
 
 import java.util.Optional;
 
+@Slf4j
+@AllArgsConstructor
 @Service
 public class RecipeService {
     
@@ -20,16 +24,6 @@ public class RecipeService {
     private final RecipeProductsRepository recipeProductsRepository;
     private final RecipeRepository recipeRepository;
     private final UserService userService;
-    
-    public RecipeService(StorageService storageService,
-                         RecipeProductsRepository recipeProductsRepository,
-                         RecipeRepository recipeRepository,
-                         UserService userService) {
-        this.storageService = storageService;
-        this.recipeProductsRepository = recipeProductsRepository;
-        this.recipeRepository = recipeRepository;
-        this.userService = userService;
-    }
     
     public Page<Recipe> recipesListWithPictures(Pageable pageable) {
         User user = userService.getUserFromContext();
@@ -45,6 +39,17 @@ public class RecipeService {
     public Page<Recipe> favAndOwnRecipesPageWithPictures(Pageable pageable) {
         User user = userService.getUserFromContext();
         Page<Recipe> recipes = recipeRepository.findFavouriteAndOwnRecipes(user.getId(), pageable);
+        recipes.forEach(s -> {
+            if (s.getImage() != null) {
+                s.setImageBuff(storageService.convertImage(s.getImage()));
+            }
+        });
+        return recipes;
+    }
+    
+    public Page<Recipe> usersFavouriteRecipes(Pageable pageable) {
+        User user = userService.getUserFromContext();
+        Page<Recipe> recipes = recipeRepository.findFavouriteRecipes(user.getId(), pageable);
         recipes.forEach(s -> {
             if (s.getImage() != null) {
                 s.setImageBuff(storageService.convertImage(s.getImage()));
@@ -174,4 +179,10 @@ public class RecipeService {
         }
         recipeRepository.save(recipe);
     }
+    
+//    public boolean recipeIsUsersOrInFavourites(Recipe recipe){
+//
+//
+//    }
+    
 }

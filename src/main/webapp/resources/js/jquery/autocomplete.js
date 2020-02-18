@@ -8,12 +8,8 @@ $(document).ready(function() {
             $.getJSON("/getProducts", request, function(result) {
                 response($.map(result, function(item) {
                     return {
-                        // following property gets displayed in drop down
                         label: item.name,
-                        // following property gets entered in the textbox
                         value: item.name
-                        // following property is added for our own use
-                        // tag_url: "http://" + window.location.host + "/tags/" + item.tagId + "/" + item.name
                     }
                 }));
             });

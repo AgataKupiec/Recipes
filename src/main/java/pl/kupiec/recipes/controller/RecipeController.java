@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import pl.kupiec.recipes.entity.Product;
@@ -20,9 +18,7 @@ import pl.kupiec.recipes.entity.RecipeProducts;
 import pl.kupiec.recipes.entity.Unit;
 import pl.kupiec.recipes.repository.ProductRepository;
 import pl.kupiec.recipes.repository.UnitRepository;
-import pl.kupiec.recipes.repository.UserRepository;
 import pl.kupiec.recipes.service.RecipeService;
-import pl.kupiec.recipes.storage.StorageService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -58,7 +54,7 @@ public class RecipeController {
         return productRepository.findAll();
     }
     
-    @GetMapping(value = "/recipe/list")
+    @GetMapping(value = "recipe/list")
     public String recipeListPaged(Model model, Pageable pageable) {
         Page<Recipe> page = recipeService.recipesListWithPictures(pageable);
         model.addAttribute("recipes", page);
@@ -66,22 +62,22 @@ public class RecipeController {
     }
     
     @Secured("ROLE_USER")
-    @GetMapping(value = "/recipe/myRecipes")
+    @GetMapping("recipe/myRecipes")
     public String usersRecipeList(Model model, Pageable pageable) {
         model.addAttribute("recipes", recipeService.recipesListWithPictures(pageable));
         return "recipesList";
     }
     
     @Secured("ROLE_USER")
-    @GetMapping(value = "/recipe/fav")
+    @GetMapping("recipe/fav")
     public String usersFavouriteRecipeList(Model model, Pageable pageable) {
-        Page<Recipe> favRecipes = recipeService.favAndOwnRecipesPageWithPictures(pageable);
+        Page<Recipe> favRecipes = recipeService.usersFavouriteRecipes(pageable);
         model.addAttribute("recipes", favRecipes);
         return "recipesList";
     }
     
     @Secured("ROLE_USER")
-    @GetMapping(value = "/recipe/add")
+    @GetMapping("recipe/add")
     public String recipeForm(Model model) {
         Recipe recipe = new Recipe();
         model.addAttribute("recipe", recipe);
@@ -90,7 +86,7 @@ public class RecipeController {
     
     
     @Secured("ROLE_USER")
-    @PostMapping(value = "/recipe/add")
+    @PostMapping("recipe/add")
     public String recipeAdd(@Valid Recipe recipe, Model model,
                             @RequestParam("imageInput") MultipartFile file) {
         
@@ -99,14 +95,14 @@ public class RecipeController {
     }
     
     @Secured("ROLE_USER")
-    @GetMapping(value = "/recipe/edit")
+    @GetMapping("recipe/edit")
     public String editRecipes(Model model, Pageable pageable) {
         model.addAttribute("recipes", recipeService.recipesListWithPictures(pageable));
         return "recipe/userRecipesPanel";
     }
     
     @Secured("ROLE_USER")
-    @RequestMapping(value = "/recipe/addProduct", method = RequestMethod.POST)
+    @PostMapping("recipe/addProduct")
     public String addProductToRecipe(@Valid RecipeProducts product, BindingResult bindingResult) {
         if (!bindingResult.hasErrors() && product != null) {
             recipeService.addProductToRecipe(product);
@@ -115,7 +111,7 @@ public class RecipeController {
     }
     
     @Secured("ROLE_USER")
-    @RequestMapping(value = "/recipe/{recipeId}/delProduct/{recipeProductId}", method = RequestMethod.GET)
+    @GetMapping("recipe/{recipeId}/delProduct/{recipeProductId}")
     public String deleteProductFromRecipe(@PathVariable Long recipeId,
                                       @PathVariable Long recipeProductId) {
         
@@ -123,7 +119,7 @@ public class RecipeController {
         return "redirect:/recipe/details/" + recipeId;
     }
     
-    @GetMapping(value = "/recipe/details/{id}")
+    @GetMapping("recipe/details/{id}")
     public String recipeDetails(Model model, @PathVariable Long id) {
         Recipe recipe = recipeService.getRecipeOfLoggedUserWithPicture(id);
         if (recipe != null) {
@@ -136,7 +132,7 @@ public class RecipeController {
         return "redirect:/recipe/list";
     }
     
-    @GetMapping(value = "/recipe/{id}")
+    @GetMapping("recipe/{id}")
     public String recipeDetailsShow(Model model, @PathVariable Long id) {
         Recipe recipe = recipeService.recipeWithPictureById(id);
         if (recipe == null) {
@@ -147,7 +143,7 @@ public class RecipeController {
     }
     
     @Secured("ROLE_USER")
-    @GetMapping(value = "/recipe/edit/{recipeId}")
+    @GetMapping("recipe/edit/{recipeId}")
     public String editRecipeForm(Model model, @PathVariable Long recipeId) {
         Recipe recipe = recipeService.getRecipeOfLoggedUserWithPicture(recipeId);
         if (recipe == null) {
@@ -158,7 +154,7 @@ public class RecipeController {
     }
     
     @Secured("ROLE_USER")
-    @GetMapping(value = "/recipe/delete/{recipeId}")
+    @GetMapping("recipe/delete/{recipeId}")
     public String deleteRecipe(Model model, @PathVariable Long recipeId) {
         recipeService.deleteRecipe(recipeId);
         return "redirect:/recipe/edit";
@@ -166,12 +162,14 @@ public class RecipeController {
     }
     
     @Secured("ROLE_USER")
-    @PostMapping(value = "/recipe/edit")
+    @PostMapping("recipe/edit")
     public String editRecipe(@Valid Recipe recipe, @RequestParam("imageInput") MultipartFile file, BindingResult result) {
         if (!result.hasErrors()) {
             recipeService.updateRecipe(recipe, file);
         }
         return "redirect:/recipe/edit";
     }
+    
+    
     
 }
